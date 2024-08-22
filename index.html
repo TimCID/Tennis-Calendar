@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tennis Themed Family Event Planner</title>
+
+    <!-- Tennis Ball Favicon Placeholder -->
+    <link rel="icon" href="tennis-ball.png" type="image/png">
+
+    <style>
+        /* HEAD Branding Colors */
+        :root {
+            --head-black: #000;
+            --head-white: #fff;
+            --head-orange: #ff6600;
+            --highlight-color: #ffcc00;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--head-black);
+            margin: 0;
+            padding: 20px;
+            color: var(--head-white);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            color: var(--head-white);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-gap: 15px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .calendar {
+                grid-template-columns: repeat(4, 1fr); /* Adjust for tablets */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .calendar {
+                grid-template-columns: repeat(2, 1fr); /* Adjust for mobile */
+            }
+            h1 {
+                font-size: 2rem;
+            }
+        }
+
+        .day-header {
+            text-align: center;
+            font-weight: bold;
+            text-transform: uppercase;
+            padding: 10px;
+            background-color: var(--head-black);
+            color: var(--head-white);
+        }
+
+        .day {
+            background-color: var(--head-white);
+            border: 3px solid var(--head-orange);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+            color: var(--head-black);
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            height: 150px;
+        }
+
+        .highlight {
+            background-color: var(--highlight-color);
+            border-color: var(--head-orange);
+            color: var(--head-black);
+        }
+
+        .day h4 {
+            margin: 0;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            color: var(--head-black);
+        }
+
+        .event-list {
+            margin: 10px 0 0;
+            padding: 0;
+            list-style-type: none;
+            height: 60px;
+            overflow-y: auto;
+        }
+
+        .event-list li {
+            background-color: var(--head-orange);
+            padding: 10px;
+            margin-bottom: 5px;
+            font-size: 1rem;
+            border-radius: 5px;
+            color: var(--head-white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .delete-btn {
+            background-color: var(--head-black);
+            color: var(--head-white);
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .add-event {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            right: 10px;
+            text-align: center;
+        }
+
+        .add-event button {
+            padding: 10px 20px;
+            background-color: var(--head-orange);
+            color: var(--head-white);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .add-event button:hover {
+            background-color: var(--head-black);
+            color: var(--head-orange);
+        }
+
+        .header {
+            background-color: var(--head-black);
+            color: var (--head-white);
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header img {
+            width: 150px;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
+        .month-selector {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        select {
+            padding: 10px;
+            font-size: 1em;
+            border-radius: 5px;
+            border: 2px solid var(--head-orange);
+            background-color: var(--head-black);
+            color: var(--head-white);
+        }
+
+        .toggle-view {
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .toggle-view button {
+            padding: 10px 20px;
+            background-color: var(--head-orange);
+            color: var(--head-white);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .upcoming-events {
+            margin: 30px 0;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: var(--head-white);
+            color: var(--head-black);
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .upcoming-events h2 {
+            text-align: center;
+            text-transform: uppercase;
+            color: var(--head-black);
+        }
+
+        .upcoming-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .upcoming-list li {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .sponsored {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: var(--head-white);
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            color: var(--head-black);
+        }
+
+        .sponsored img {
+            max-width: 200px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <img src="HeadLogo-4GF.svg" alt="Head Logo">
+        <h1>Tennis Event Planner</h1>
+    </div>
+
+    <div class="month-selector">
+        <label for="month">Select Month: </label>
+        <select id="month" onchange="generateCalendar()">
+            <option value="0">January</option>
+            <option value="1">February</option>
+            <option value="2">March</option>
+            <option value="3">April</option>
+            <option value="4">May</option>
+            <option value="5">June</option>
+            <option value="6">July</option>
+            <option value="7">August</option>
+            <option value="8">September</option>
+            <option value="9">October</option>
+            <option value="10">November</option>
+            <option value="11">December</option>
+        </select>
+    </div>
+
+    <div class="toggle-view">
+        <button onclick="toggleView()">Toggle Week/Month View</button>
+    </div>
+
+    <div class="upcoming-events">
+        <h2>Upcoming Events in the Next Week</h2>
+        <ul id="upcoming-list" class="upcoming-list">
+        </ul>
+    </div>
+
+    <div class="calendar" id="calendar">
+    </div>
+
+    <div class="sponsored">
+        <h2>Sponsored by Certif-ID</h2>
+        <img src="Certif-ID_Logo (1).png" alt="Certif-ID Logo">
+    </div>
+
+    <script>
+        const calendar = document.getElementById('calendar');
+        let events = JSON.parse(localStorage.getItem('events')) || {};
+
+        const today = new Date();
+        const currentDay = today.getDate();
+        const currentMonth = today.getMonth();
+        const currentYear = today.getFullYear();
+        let viewMode = 'month';
+
+        // Function to calculate days in month
+        function daysInMonth(month, year) {
+            return new Date(year, month + 1, 0).getDate();
+        }
+
+        // Function to calculate the first day of the month (0=Sunday, 1=Monday, etc.)
+        function firstDayOfMonth(month, year) {
+            return new Date(year, month, 1).getDay();
+        }
+
+        // Function to get the month's name
+        function getMonthName(month) {
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            return monthNames[month];
+        }
+
+        // Function to update the upcoming events
+        function updateUpcomingEvents() {
+            const upcomingList = document.getElementById('upcoming-list');
+            upcomingList.innerHTML = ''; // Clear previous events
+
+            const today = new Date();
+            const currentDate = today.getDate();
+            const currentMonth = today.getMonth();
+            const currentYear = today.getFullYear();
+
+            const nextWeek = new Date(today);
+            nextWeek.setDate(currentDate + 7);
+
+            // Loop through dates from today to next week
+            for (let date = new Date(today); date <= nextWeek; date.setDate(date.getDate() + 1)) {
+                const day = date.getDate();
+                const month = date.getMonth();
+                const eventKey = `${currentYear}-${month}-${day}`;
+                
+                if (events[eventKey]) {
+                    for (const event of events[eventKey]) {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = `${getMonthName(month)} ${day}: ${event}`;
+                        upcomingList.appendChild(listItem);
+                    }
+                }
+            }
+        }
+
+        // Function to generate the calendar
+        function generateCalendar() {
+            const monthSelect = document.getElementById('month');
+            const selectedMonth = parseInt(monthSelect.value);
+            const numOfDays = daysInMonth(selectedMonth, currentYear);
+            const firstDay = firstDayOfMonth(selectedMonth, currentYear) === 0 ? 6 : firstDayOfMonth(selectedMonth, currentYear) - 1; // Monday start
+
+            // Clear previous days
+            calendar.innerHTML = '';
+
+            // Add day headers (Monday to Sunday)
+            const dayHeaders = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            dayHeaders.forEach(day => {
+                const dayHeaderElement = document.createElement('div');
+                dayHeaderElement.classList.add('day-header');
+                dayHeaderElement.textContent = day;
+                calendar.appendChild(dayHeaderElement);
+            });
+
+            let dayCounter = 1;
+
+            for (let i = 0; i < 42; i++) {  // 42 cells in the grid (6 weeks, 7 days each)
+                const dayElement = document.createElement('div');
+                dayElement.classList.add('day');
+
+                if (i >= firstDay && dayCounter <= numOfDays) {
+                    const dayTitle = document.createElement('h4');
+                    const fullDate = `${getMonthName(selectedMonth)} ${dayCounter}`;
+                    dayTitle.textContent = fullDate;  // Display Month and Day (e.g., "August 22")
+                    dayElement.id = `day-${currentYear}-${selectedMonth}-${dayCounter}`;
+                    dayElement.appendChild(dayTitle);
+
+                    // Highlight today if it matches the current day and month
+                    if (dayCounter === currentDay && selectedMonth === currentMonth) {
+                        dayElement.classList.add('highlight');
+                    }
+
+                    const eventList = document.createElement('ul');
+                    eventList.classList.add('event-list');
+                    dayElement.appendChild(eventList);
+
+                    const addEventDiv = document.createElement('div');
+                    addEventDiv.classList.add('add-event');
+
+                    const addEventButton = document.createElement('button');
+                    addEventButton.textContent = 'Add Tennis Event';
+                    addEventButton.onclick = () => addEvent(dayCounter, selectedMonth);
+
+                    addEventDiv.appendChild(addEventButton);
+                    dayElement.appendChild(addEventDiv);
+
+                    calendar.appendChild(dayElement);
+
+                    if (events[`${currentYear}-${selectedMonth}-${dayCounter}`]) {
+                        for (const event of events[`${currentYear}-${selectedMonth}-${dayCounter}`]) {
+                            appendEvent(dayCounter, event, selectedMonth);
+                        }
+                    }
+                    dayCounter++;
+                } else {
+                    calendar.appendChild(dayElement);  // Add empty cell for days outside of the current month
+                }
+            }
+
+            updateUpcomingEvents();
+        }
+
+        // Function to add event
+        function addEvent(day, month) {
+            const eventName = prompt("Enter tennis event name:");
+            const eventKey = `${currentYear}-${month}-${day}`;
+            if (eventName) {
+                if (!events[eventKey]) {
+                    events[eventKey] = [];
+                }
+                events[eventKey].push(eventName);
+                appendEvent(day, eventName, month);
+                updateUpcomingEvents();
+                saveEvents();
+            }
+        }
+
+        // Function to append event to a specific day
+        function appendEvent(day, eventName, month) {
+            const eventKey = `${currentYear}-${month}-${day}`;
+            const eventList = document.querySelector(`#day-${currentYear}-${month}-${day} .event-list`);
+            const newEvent = document.createElement('li');
+            newEvent.textContent = eventName;
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = 'Delete';
+            deleteBtn.classList.add('delete-btn');
+            deleteBtn.onclick = () => {
+                eventList.removeChild(newEvent);
+                removeEvent(day, eventName, month);
+                updateUpcomingEvents();
+                saveEvents();
+            };
+
+            newEvent.appendChild(deleteBtn);
+            eventList.appendChild(newEvent);
+        }
+
+        // Function to remove event
+        function removeEvent(day, eventName, month) {
+            const eventKey = `${currentYear}-${month}-${day}`;
+            events[eventKey] = events[eventKey].filter(event => event !== eventName);
+        }
+
+        // Save events to local storage
+        function saveEvents() {
+            localStorage.setItem('events', JSON.stringify(events));
+        }
+
+        // Toggle between week and month view
+        function toggleView() {
+            if (viewMode === 'month') {
+                viewMode = 'week';
+                const selectedMonth = parseInt(document.getElementById('month').value);
+
+                const currentWeek = new Date();
+                const firstDayOfWeek = currentWeek.getDate() - currentWeek.getDay() + 1;  // Monday is the start of the week
+                const lastDayOfWeek = firstDayOfWeek + 6;
+
+                calendar.innerHTML = '';
+
+                for (let i = firstDayOfWeek; i <= lastDayOfWeek; i++) {
+                    const dayElement = document.createElement('div');
+                    dayElement.classList.add('day');
+                    const dayTitle = document.createElement('h4');
+                    const fullDate = `${getMonthName(currentWeek.getMonth())} ${i}`;
+                    dayTitle.textContent = fullDate;
+                    dayElement.id = `day-${currentYear}-${selectedMonth}-${i}`;
+                    dayElement.appendChild(dayTitle);
+
+                    const eventList = document.createElement('ul');
+                    eventList.classList.add('event-list');
+                    dayElement.appendChild(eventList);
+
+                    const addEventDiv = document.createElement('div');
+                    addEventDiv.classList.add('add-event');
+
+                    const addEventButton = document.createElement('button');
+                    addEventButton.textContent = 'Add Tennis Event';
+                    addEventButton.onclick = () => addEvent(i, selectedMonth);
+
+                    addEventDiv.appendChild(addEventButton);
+                    dayElement.appendChild(addEventDiv);
+
+                    calendar.appendChild(dayElement);
+
+                    if (events[`${currentYear}-${selectedMonth}-${i}`]) {
+                        for (const event of events[`${currentYear}-${selectedMonth}-${i}`]) {
+                            appendEvent(i, event, selectedMonth);
+                        }
+                    }
+                }
+            } else {
+                viewMode = 'month';
+                generateCalendar();
+            }
+        }
+
+        // Initialize calendar for current month and day
+        window.onload = function() {
+            document.getElementById('month').value = currentMonth;
+            generateCalendar();
+        }
+    </script>
+
+</body>
+</html>
+
+
+
